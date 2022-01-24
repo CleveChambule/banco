@@ -7,5 +7,7 @@ class ManipuladorDeTributaveis:
 
         return total
 
+    if __name__ == '__main__':
+
 
 
