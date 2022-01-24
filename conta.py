@@ -1,7 +1,8 @@
 from historico import Historico
+import abc
+from tributavel import TributavelMixIn
 
-
-class Conta:
+class Conta(abc.ABC):
 
     #ATRIBUTO DA CLASSE
     _total_contas = 0
@@ -27,7 +28,7 @@ class Conta:
 
     def deposita(self, valor):
         if valor > self._limite:
-            print("OPERACAO IMPOSSIVL! O seu limite de saldo e de {}".format(self._limite))
+            print("OPERACAO IMPOSSIVEL! O seu limite de saldo e de {}".format(self._limite))
         else:
             self._saldo += valor
             self.historico.transacoes.append("Deposito no valor de {}".format(valor))
@@ -62,6 +63,7 @@ class Conta:
     def get_total_contas():
         return Conta._total_contas
 
+    @abc.abstractmethod
     def actualiza(self, taxa):
         self._saldo += self._saldo * taxa
         return self._saldo
@@ -77,43 +79,74 @@ class Conta:
 #CONTA CORRENTE - FILHA DA CONTA
 class ContaCorrente(Conta):
 
-    def actualiza(self, taxa):
-       self._saldo += self._saldo * taxa * 2
-       return self._saldo
+    _tipo = "Conta_Corrente"
+
+    def actualiza(self,taxa):
+        self._saldo += self._saldo * taxa * 2
+        return self._saldo
 
     def deposita(self, valor):
         self._saldo += self._saldo - 0.10
 
+    def get_valor_imposto(self):
+        return self._saldo * 0.01
+
+    def __str__(self):
+        return super().__str__() + "\nTipo de Conta: {}".format(ContaCorrente._tipo)
+
 #CONTA POUPANCA - FILHA DA CONTA
 class ContaPoupanca(Conta):
+
+    _tipo = "Conta_Poupanca"
 
     def actualiza(self, taxa):
         self._saldo += self._saldo * taxa * 3
         return self._saldo
 
+    def __str__(self):
+        return super().__str__() + "\nTipo de Conta: {}".format(ContaPoupanca._tipo)
 
+
+class ContaInvestimento(Conta):
+    _tipo = "Conta_Investimento"
+    def actualiza(self, taxa):
+        self._saldo += self._saldo * taxa  * 5
+        return self._saldo
+
+    def __str__(self):
+        return super().__str__() + "\nTipo de Conta: {}".format(ContaInvestimento._tipo)
 
 
 
 if __name__ == '__main__':
     from cliente import Cliente
     from actualizadoDEcontas import ActualizadorDeContas
+    from banco import Banco
 
-    cliente1 = Cliente("Cleive","Chambule","1431J")
-    cliente2 = Cliente("Obed","Chambule","432J")
-    cliente3 = Cliente("Betoel", "Chambule","431M")
-    c1 = Conta("789", cliente1, 1000)
-    c2 = ContaCorrente("123",cliente2, 1000)
-    c3 = ContaPoupanca("456",cliente3, 1000)
+    cliente1 = Cliente("Obed","Chambule","432J")
+    cliente2 = Cliente("Betoel", "Chambule","431M")
+    cliente3 = Cliente("Cleive", "Chambule", "870K")
+    c1 = ContaCorrente("123",cliente1, 1000)
+    c2 = ContaPoupanca("456",cliente2, 1000)
+    c3 = ContaInvestimento(123,cliente3,2000)
 
 
-    adc = ActualizadorDeContas(0.01)
 
-    adc.roda(c1)
-    adc.roda(c2)
-    adc.roda(c3)
 
-    print(c3)
+    #adc = ActualizadorDeContas(0.01)
+    contas = []
+    banco = Banco(contas)
+    banco.adiciona_conta(c1)
+    banco.adiciona_conta(c2)
+    banco.adiciona_conta(c3)
+    #banco.posicao_conta("789")
+
+    banco.conta_roda(contas)
+    #adc.roda(c1)
+
+
+
+    print(c2)
 
 
 
