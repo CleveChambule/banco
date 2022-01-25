@@ -1,7 +1,7 @@
-from tributavel import TributavelMixIn
+from tributavel import Tributavel
 
 
-class SeguroDeVida(TributavelMixIn):
+class SeguroDeVida():
 
     def __init__(self, valor, titular, numero_apolice):
         self._valor = valor

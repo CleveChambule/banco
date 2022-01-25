@@ -2,7 +2,7 @@ from actualizadoDEcontas import ActualizadorDeContas
 class Banco:
 
 
-    def __init__(self, contas):
+    def __init__(self):
         self.contas = []
 
     def adiciona_conta(self, conta):
@@ -22,6 +22,7 @@ class Banco:
         while total_contas < len(self.contas):
             total_contas += 1
         print(total_contas)
+
 
     def conta_roda(self,contas):
         actualiza = ActualizadorDeContas(0.01)
