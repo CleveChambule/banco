@@ -102,6 +102,7 @@ class ContaCorrente(Conta):
           raise ValueError("OPERACAO IMPOSSIVEL! Voce tentou depositar um valor negativo")
         else:
             self._saldo += + valor - 0.10
+            self.historico.transacoes.append("Deposito de {}".format(valor))
 
     def saca(self, valor):
         if valor < 0:
@@ -134,6 +135,7 @@ class ContaPoupanca(Conta):
           raise ValueError("OPERACAO IMPOSSIVEL! Voce tentou depositar um valor negativo")
         else:
             self._saldo += + valor + 0.10
+            self.historico.transacoes.append("Deposito de {}".format(valor))
 
     def __str__(self):
         return super().__str__() + "\nTipo de Conta: {}".format(ContaPoupanca._tipo)
@@ -189,6 +191,7 @@ if __name__ == '__main__':
         print("Voce nao possui saldo suficiente para concluir esta operacao")
 
     cc.deposita(200)
+    cc.historico.imprime()
     print(cc)
 
 
